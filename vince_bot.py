@@ -25,7 +25,7 @@ def randomVinceQuote():
     global lastUsed
     duration = datetime.datetime.now() - lastUsed
     print("Time since: " + str(duration.seconds))
-    if duration.seconds > 30: # Time buffer to prevent hitting googlesheets API
+    if duration.seconds > 30: # Time buffer to prevent hitting googlesheets API limit
         # Pull new quotes from google sheets
         print("Pulled new")
         lastUsed = datetime.datetime.now()
@@ -63,6 +63,7 @@ async def vincent_quote(ctx, arg: int):
 async def getLink(ctx):
     await ctx.send(google_doc)
 
+# Might be able to combine this with above
 # Add quotes to public googledoc
 @bot.command(name="addquote", help="Gives link to add quotes")
 async def getLink1(ctx):
@@ -86,7 +87,7 @@ async def listQuotes(ctx):
     for x in vinceQuotes:
         toPrint += str(num) + ": " + x + "\n"
         num += 1
-    # Need to split for ever 1990 characters to avoid discord DM character limit
+    # Need to split for every 1990 characters to avoid discord DM character limit
     split = [toPrint[i:i+1990] for i in range(0, len(toPrint), 1990)]
     for x in split:
         await ctx.author.send("```css\n" + x + "```")
